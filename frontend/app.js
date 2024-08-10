@@ -3,7 +3,8 @@ const searchForm = document.getElementById('search-form');
 const updateForm = document.getElementById('update-form');
 const tasksList = document.getElementById('tasks');
 
-const apiUrl = 'http://localhost:3000/api/tasks';
+const apiUrl = 'https://to-do-list-app-roum.onrender.com/api/tasks';
+
 const fetchTasks = async (query = '') => {
     const response = await fetch(query ? `${apiUrl}/search/${query}` : apiUrl);
     const tasks = await response.json();
