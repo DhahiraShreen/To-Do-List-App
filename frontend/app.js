@@ -73,20 +73,22 @@ const fetchTasks = async (query = '') => {
     }
 };
 
-
-
 // Add a new task
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const description = document.getElementById('description').value;
-    const deadline = document.getElementById('deadline').value;
+    let deadline = new Date(document.getElementById('deadline').value);
+
+    // Convert the deadline to UTC
+    deadline = new Date(deadline.getTime() + deadline.getTimezoneOffset() * 60000);
+
     await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ description, deadline })
-    });                                                        
+    });
 
     form.reset();
     fetchTasks();
@@ -106,7 +108,8 @@ updateForm.addEventListener('submit', async (e) => {
     const description = document.getElementById('update-description').value;
     const deadline = document.getElementById('update-deadline').value;
     await fetch(`${apiUrl}/${id}`, {
-        method: 'PATCH',        headers: {
+        method: 'PATCH',        
+        headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ description, deadline })
