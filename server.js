@@ -9,14 +9,17 @@ const cron = require('node-cron');
 const notifier = require('node-notifier'); // For desktop notifications
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/todo-app');
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
