@@ -83,16 +83,16 @@ form.addEventListener('submit', async (e) => {
     console.log("Original deadline as Date object:", deadline);
 
     // Convert the deadline to UTC
-    deadline = new Date(deadline.getTime() + deadline.getTimezoneOffset() * 60000);
+    const utcDeadline = deadline.toISOString(); // Convert to ISO string which is UTC by default
 
-    console.log("Converted to UTC:", deadline.toISOString());
+    console.log("Converted to UTC:", utcDeadline);
 
     await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ description, deadline })
+        body: JSON.stringify({ description, deadline: utcDeadline })
     });
 
     form.reset();
