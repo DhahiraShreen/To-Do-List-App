@@ -17,11 +17,10 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-
-// MongoDB Connection using the environment variable MONGO_URI
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect('mongodb+srv://DhahiraShreenAdmin:aO2rqlDce5P1t0Lb@cluster0.jkn23.mongodb.net/TodoList?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('MongoDB connection error:', err));
+
 
 // Routes
 app.use('/api', taskRoutes);
