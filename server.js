@@ -8,24 +8,20 @@ const Task = require('./models/Task');
 const cron = require('node-cron');
 const notifier = require('node-notifier'); // For desktop notifications
 
+// Initialize Express app
 const app = express();
+
+// Define the port, use the environment variable PORT or default to 3000
 const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-    console.log('Connected to MongoDB');
-});
+// MongoDB Connection using the environment variable MONGO_URI
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api', taskRoutes);
@@ -33,12 +29,12 @@ app.use('/api', taskRoutes);
 // Serve static files
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-// Default route
+// Default route to serve the frontend
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
-// Start server
+// Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
