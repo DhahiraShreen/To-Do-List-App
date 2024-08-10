@@ -79,8 +79,13 @@ form.addEventListener('submit', async (e) => {
     const description = document.getElementById('description').value;
     let deadline = new Date(document.getElementById('deadline').value);
 
+    console.log("Original deadline input:", document.getElementById('deadline').value);
+    console.log("Original deadline as Date object:", deadline);
+
     // Convert the deadline to UTC
     deadline = new Date(deadline.getTime() + deadline.getTimezoneOffset() * 60000);
+
+    console.log("Converted to UTC:", deadline.toISOString());
 
     await fetch(apiUrl, {
         method: 'POST',
@@ -107,6 +112,10 @@ updateForm.addEventListener('submit', async (e) => {
     const id = document.getElementById('update-id').value;
     const description = document.getElementById('update-description').value;
     const deadline = document.getElementById('update-deadline').value;
+
+    console.log("Updating task with ID:", id);
+    console.log("New deadline:", deadline);
+
     await fetch(`${apiUrl}/${id}`, {
         method: 'PATCH',        
         headers: {
