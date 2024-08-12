@@ -21,7 +21,12 @@ const fetchTasks = async (query = '') => {
         li.addEventListener('click', () => {
             document.getElementById('update-id').value = task._id;
             document.getElementById('update-description').value = task.description;
-            document.getElementById('update-deadline').value = new Date(task.deadline).toISOString().slice(0, 16);
+            
+            // Convert the deadline from UTC to local time
+            const deadlineUTC = new Date(task.deadline);
+            const localDeadline = new Date(deadlineUTC.getTime() - deadlineUTC.getTimezoneOffset() * 60000);
+            document.getElementById('update-deadline').value = localDeadline.toISOString().slice(0, 16);
+            
             updateForm.style.display = 'block';
         });
 
@@ -111,17 +116,22 @@ updateForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('update-id').value;
     const description = document.getElementById('update-description').value;
-    const deadline = document.getElementById('update-deadline').value;
+    let deadline = new Date(document.getElementById('update-deadline').value);
 
     console.log("Updating task with ID:", id);
-    console.log("New deadline:", deadline);
+    console.log("New deadline input:", deadline);
+
+    // Convert the deadline to UTC
+    const utcDeadline = deadline.toISOString(); // Convert to ISO string which is UTC by default
+
+    console.log("Converted to UTC for update:", utcDeadline);
 
     await fetch(`${apiUrl}/${id}`, {
-        method: 'PATCH',        
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ description, deadline })
+        body: JSON.stringify({ description, deadline: utcDeadline })
     });
     updateForm.style.display = 'none';
     fetchTasks();
